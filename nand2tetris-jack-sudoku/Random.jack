@@ -1,12 +1,10 @@
 class Random {
-
     static int seed;
 
     function void init() {
         let seed = 12345;
         return;
     }
-
     function int next() {
         var int value;
 
@@ -16,14 +14,12 @@ class Random {
         if (seed < 0) {
             let seed = -seed;
         }
-
         let value = seed;
 
         // mod 21 bez %
         while (value > 15) {
             let value = value - 21;
         }
-
         return value;
     }
 }
