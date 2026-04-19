@@ -1,0 +1,410 @@
+class Sudoku {
+
+    field Array board;
+    field int row, col, sudokuDifficulty;
+    field Array tablica;
+    field boolean needsRedraw;
+    
+
+    // ---------------- POTREBNE METODE --------------------
+
+    method int mod(int a, int b) {
+        return a - Math.multiply(a / b, b);
+    }
+
+    method int rand(int max) {
+    var int r;
+
+    let r = Random.next();
+
+    // osiguraj da je pozitivan
+    if (r < 0) {
+        let r = 0 - r;
+    }
+
+    return mod(r, max);
+    }
+
+    // zamjena redaka unutar bloka
+    method void swapRows(int r1, int r2) {
+    var int c, temp;
+
+    if ((r1 < 0) | (r1 > 8) | (r2 < 0) | (r2 > 8)) {
+        return;
+    }
+    
+    let c = 0;
+    while (c < 9) {
+        let temp = tablica[r1 * 9 + c];
+        let tablica[r1 * 9 + c] = tablica[r2 * 9 + c];
+        let tablica[r2 * 9 + c] = temp;
+        let c = c + 1;
+    }
+    return;
+    }
+
+    method void swapNumbers(int a, int b) {
+    var int i;
+
+    let i = 0;
+    while (i < 81) {
+        if (tablica[i] = a) {
+            let tablica[i] = b;
+        } else {
+            if (tablica[i] = b) {
+                let tablica[i] = a;
+            }
+        }
+        let i = i + 1;
+    }
+    return;
+}
+
+    // random shuffle baze
+    method void shuffle() {
+        var int i, a, b;
+
+        let i = 0;
+        while (i < 20) {
+
+            let a = rand(9) + 1;   // 1–9
+            let b = rand(9) + 1;
+
+            do swapNumbers(a, b);
+
+            let i = i + 1;
+        }
+        return;
+    }
+
+    // ---------------- GENERIRANJE TABLICE ----------------
+
+    method void initBaza() {
+        let tablica[0] = 1;  let tablica[1] = 2;  let tablica[2] = 3;  let tablica[3] = 4;  let tablica[4] = 5;  let tablica[5] = 6;  let tablica[6] = 7;  let tablica[7] = 8;  let tablica[8] = 9;
+        let tablica[9] = 4;  let tablica[10] = 5; let tablica[11] = 6; let tablica[12] = 7; let tablica[13] = 8; let tablica[14] = 9; let tablica[15] = 1; let tablica[16] = 2; let tablica[17] = 3;
+        let tablica[18] = 7; let tablica[19] = 8; let tablica[20] = 9; let tablica[21] = 1; let tablica[22] = 2; let tablica[23] = 3; let tablica[24] = 4; let tablica[25] = 5; let tablica[26] = 6;
+        let tablica[27] = 2; let tablica[28] = 3; let tablica[29] = 4; let tablica[30] = 5; let tablica[31] = 6; let tablica[32] = 7; let tablica[33] = 8; let tablica[34] = 9; let tablica[35] = 1;
+        let tablica[36] = 5; let tablica[37] = 6; let tablica[38] = 7; let tablica[39] = 8; let tablica[40] = 9; let tablica[41] = 1; let tablica[42] = 2; let tablica[43] = 3; let tablica[44] = 4;
+        let tablica[45] = 8; let tablica[46] = 9; let tablica[47] = 1; let tablica[48] = 2; let tablica[49] = 3; let tablica[50] = 4; let tablica[51] = 5; let tablica[52] = 6; let tablica[53] = 7;
+        let tablica[54] = 3; let tablica[55] = 4; let tablica[56] = 5; let tablica[57] = 6; let tablica[58] = 7; let tablica[59] = 8; let tablica[60] = 9; let tablica[61] = 1; let tablica[62] = 2;
+        let tablica[63] = 6; let tablica[64] = 7; let tablica[65] = 8; let tablica[66] = 9; let tablica[67] = 1; let tablica[68] = 2; let tablica[69] = 3; let tablica[70] = 4; let tablica[71] = 5;
+        let tablica[72] = 9; let tablica[73] = 1; let tablica[74] = 2; let tablica[75] = 3; let tablica[76] = 4; let tablica[77] = 5; let tablica[78] = 6; let tablica[79] = 7; let tablica[80] = 8;
+        return;
+    }
+
+    // ---------------- ISPIS-HELP ----------------
+
+    method void generateRandomBoard() {
+    var int i;
+    var int rand;
+
+    let i = 0;
+
+    while (i < 81) {
+
+        // uzmi ispravno rješenje iz tablice
+        let board[i] = tablica[i];
+
+        // generiraj “random praznine”
+        let rand = Random.next();  // 0–9
+
+        // npr. ~50% prazno
+        if (rand < sudokuDifficulty) {
+            let board[i] = 0;
+        }
+
+        let i = i + 1;
+    }
+
+    return;
+}
+    // ---------------- KONSTRUKTOR ----------------
+
+    constructor Sudoku new() {
+
+    let board = Array.new(81);
+    let tablica = Array.new(81);
+    let needsRedraw = true;
+    let row = 0;
+    let col = 0;
+    let sudokuDifficulty = 3;
+
+    do Screen.clearScreen();
+
+    // ---- FAZA 1: init ----
+    do Output.printString("Initializing...");
+    do init();
+    do drawLoadingBar(1, 4);
+    do Sys.wait(50);
+
+    // ---- FAZA 2: baza ----
+    do initBaza();
+    do drawLoadingBar(2, 4);
+    do Sys.wait(50);
+
+    // ---- FAZA 3: shuffle ----
+    do shuffle();
+    do drawLoadingBar(3, 4);
+    do Sys.wait(50);
+
+    // ---- FAZA 4: generate ----
+    do generateRandomBoard();
+    do drawLoadingBar(4, 4);
+    do Sys.wait(50);
+
+    do Output.printString("\nDone!");
+
+    return this;
+}
+
+    method void init() {
+        var int i;
+        let i = 0;
+
+        while (i < 81) {
+            let board[i] = 0;
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+    method void run() {
+        do Screen.clearScreen();
+
+        while (true) {
+            do handleInput();
+
+            if(needsRedraw){
+                do draw();
+                let needsRedraw = false;
+            }
+            do Sys.wait(50);
+        }
+        return;
+    }
+
+    method void draw() {
+        do Screen.clearScreen();
+        do drawGrid();
+        do drawNumbers();
+        do drawCursor();
+        do drawDifficulty();
+        return;
+    }
+
+    method void autoSolveStep() {
+    var int i;
+
+    let i = 0;
+
+    while (i < 81) {
+
+        if (board[i] = 0) {
+            let board[i] = tablica[i];
+            return;   // stani nakon jedne popunjene
+        }
+
+        let i = i + 1;
+    }
+
+    return;
+}
+
+
+method void drawLoadingBar(int step, int total) {
+    var int i;
+    var int filled;
+    var int percent;
+
+    let percent = step * 100 / total;
+    let filled = step * 20 / total;
+
+    do Output.moveCursor(12, 0);
+    do Output.printString("Loading: [");
+
+    let i = 0;
+    while (i < 20) {
+
+        if (i < filled) {
+            do Output.printChar(35); // '#'
+        } else {
+            do Output.printChar(46); // '.'
+        }
+
+        let i = i + 1;
+    }
+
+    do Output.printString("] ");
+
+    // ispis postotka
+    do Output.printInt(percent);
+    do Output.printChar(37); // '%'
+
+    return;
+}
+
+    // ---------------- GRID ----------------
+
+    method void drawGrid() {
+        var int i;
+        var int pos;
+
+        
+
+        let i = 0;
+
+        // HORIZONTALNE LINIJE
+        while (i < 10) {
+            let pos = 1 + i*22;
+
+            // deblje linije svake 3
+            if ((i = 0) | (i = 3) | (i = 6) | (i = 9)) {
+                do Screen.drawLine(33, pos - 5, 213, pos -5);
+                do Screen.drawLine(33, pos -4, 213, pos -4);
+            } else {
+                do Screen.drawLine(33, pos -5, 213, pos-5);
+            }
+
+            let i = i + 1;
+        }
+        let i = 0;
+
+        // VERTIKALNE LINIJE
+        while (i < 10) {
+            let pos = 1 + i*20;
+
+            // deblje linije svake 3
+            if ((i = 0) | (i = 3) | (i = 6) | (i = 9)) {
+                do Screen.drawLine(pos+12, 17, pos + 12, 215);
+                do Screen.drawLine(pos + 13, 17, pos + 13, 215);
+            } else {
+                do Screen.drawLine(pos + 12, 17, pos + 12, 215);
+            }
+
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void drawDifficulty() {
+    do Output.moveCursor(0, 0);
+    if (sudokuDifficulty = 3) {
+        do Output.printString("Difficulty: easy [D] \n New Game: [N] \n Hint: [F]  ");
+    } else {
+        if (sudokuDifficulty = 6) {
+            do Output.printString("Difficulty: medium [D] \n New Game: [N] \n Hint: [F]");
+        } else {
+            do Output.printString("Difficulty: hard [D] \n New Game: [N] \n Hint: [F]  ");
+        }
+    }
+    return;
+    }
+
+    // ---------------- BROJEVI ----------------
+
+    method void drawNumbers() {
+        var int r, c, value, index;
+
+        let r = 0;
+        while (r < 9) {
+            let c = 0;
+
+            while (c < 9) {
+                let index = r * 9 + c;
+                let value = board[index];
+
+                if (value > 0) {
+                    do Output.moveCursor(1+r*2, 2 + c * 25/10);
+                    do Output.printInt(value);
+                }
+
+                let c = c + 1;
+            }
+            let r = r + 1;
+        }
+        return;
+    }
+
+    // ---------------- CURSOR ----------------
+
+    method void drawCursor() {
+        var int x, y;
+
+        let x = 2 + col * 20;
+        let y = 1 + row * 22;
+
+        do Screen.drawRectangle(x, y, x + 8, y + 8);
+
+        return;
+    }
+
+    // ---------------- INPUT ----------------
+
+    method void handleInput() {
+    var char key;
+    var int index;
+    var int oldRow, oldCol;
+
+    let oldRow = row;
+    let oldCol = col;
+
+    let key = Keyboard.keyPressed();
+    let index = row * 9 + col;
+
+    if (key = 131) { let row = row - 1; }
+    if (key = 133) { let row = row + 1; }
+    if (key = 130) { let col = col - 1; }
+    if (key = 132) { let col = col + 1; }
+    if (key = 110 | (key = 78)) {
+        do initBaza();
+        do shuffle();
+        do generateRandomBoard();
+
+        let needsRedraw = true;
+    }
+    if (key = 100 | key = 68){
+        if(sudokuDifficulty<7){let sudokuDifficulty = sudokuDifficulty + 3;}
+        else{ let sudokuDifficulty = 3;}
+        do initBaza();
+        do shuffle();
+        do generateRandomBoard();
+
+        let needsRedraw = true;
+    }
+    if (key = 102 | key = 70){
+
+        do autoSolveStep();
+        let needsRedraw = true;
+    }
+
+    if (row < 0) { let row = 0; }
+    if (row > 8) { let row = 8; }
+    if (col < 0) { let col = 0; }
+    if (col > 8) { let col = 8; }
+
+    // unos broja 1–9
+    if ((key > 48) & (key < 58)) {
+
+        // ako unos NIJE točan
+        if (~(key - 48 = tablica[index])) {
+
+            do Output.printString("Mistake");
+            do Output.println();
+
+            // opcionalno: obriši pogrešan unos
+            let board[index] = 0;
+
+        } else {
+            let board[index] = key - 48;
+            let needsRedraw = true;
+        }
+    }
+
+    if (~((row = oldRow) & (col = oldCol))){
+        let needsRedraw = true;
+    }
+
+    return;
+    }
+}

@@ -1,0 +1,38 @@
+function Random.init 0
+push constant 12345
+pop static 0
+push constant 0
+return
+function Random.next 1
+push static 0
+push constant 75
+call Math.multiply 2
+push constant 74
+add
+pop static 0
+push static 0
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push static 0
+neg
+pop static 0
+label IF_FALSE0
+push static 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 15
+gt
+not
+if-goto WHILE_END0
+push local 0
+push constant 21
+sub
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return

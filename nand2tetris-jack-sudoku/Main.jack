@@ -1,0 +1,10 @@
+class Main {
+    function void main() {
+        var Sudoku s;
+
+        let s = Sudoku.new();
+        do s.run();
+
+        return;
+    }
+}
