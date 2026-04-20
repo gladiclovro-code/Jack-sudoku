@@ -8,15 +8,13 @@ class Random {
     function int next() {
         var int value;
 
-        // mali LCG koji NE overflowa odmah
+        //LCG
         let seed = seed * 75 + 74;
 
         if (seed < 0) {
             let seed = -seed;
         }
         let value = seed;
-
-        // mod 21 bez %
         while (value > 15) {
             let value = value - 21;
         }
