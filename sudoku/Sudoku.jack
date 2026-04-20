@@ -15,7 +15,6 @@ class Sudoku {
 
         let r = Random.next();
 
-    // osigura
         if (r < 0) {
             let r = 0 - r;
         }
@@ -65,7 +64,7 @@ class Sudoku {
         let i = 0;
         while (i < 20) {
 
-            let a = rand(9) + 1;   // 1–9
+            let a = rand(9) + 1;
             let b = rand(9) + 1;
 
             do swapNumbers(a, b);
@@ -117,7 +116,6 @@ class Sudoku {
         let i = 0;
     
         while (i < 81) {
-            // uzmi ispravno rješenje iz tablice
             let board[i] = tablica[i];
             let rand = Random.next(); 
             if (rand < sudokuDifficulty) {
@@ -237,7 +235,6 @@ class Sudoku {
     
         do Output.printString("] ");
     
-        // ispis postotka
         do Output.printInt(percent);
         do Output.printChar(37); // '%'
     
@@ -352,7 +349,6 @@ class Sudoku {
     	do Screen.setColor(false);
     	do Screen.drawRectangle(x, y, x + 8, y + 8);
     	do Screen.setColor(true);
-
     return;
     }
 
@@ -373,10 +369,10 @@ class Sudoku {
     if (key = 133) { let row = row + 1; }
     if (key = 130) { let col = col - 1; }
     if (key = 132) { let col = col + 1; }
-if(isSolved()){
+	if(isSolved()){
 	    do Output.moveCursor(5,30);
-            do Output.printString("CONGRATULATIONS!!!");
-    	}
+		do Output.printString("CONGRATULATIONS!!!");
+	}
     if (key = 110 | (key = 78)) {
 	do Screen.clearScreen();
         do initBaza();
@@ -401,18 +397,17 @@ if(isSolved()){
     if (row > 8) { let row = 8; }
     if (col < 0) { let col = 0; }
     if (col > 8) { let col = 8; }
-    // unos broja 1–9
+
     if ((key > 48) & (key < 58)) {
 	if(fixed[index] = 1){
 	    return;
 	}
         // ako unos NIJE točan
-        if (~(key - 48 = tablica[index])) {
+	if (~(key - 48 = tablica[index])) {
 	    do Output.moveCursor(5,30);
-            do Output.printString("Mistake");
-            // opcionalno: obriši pogrešan unos
-            let board[index] = 0;
-        } 
+		do Output.printString("Mistake");
+		let board[index] = 0;
+	} 
 	else {
 	    do Output.moveCursor(5,30);
             do Output.printString("       ");
