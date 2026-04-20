@@ -88,12 +88,6 @@ class Sudoku {
     	return true;
     }
 
-    method void showWinMessage() {
-    	do Output.moveCursor(5, 30);
-    	do Output.printString("CONGRATULATIONS!");
-    	return;
-    }
-
     // ---------------- GENERIRANJE-TABLICE ----------------
 
     method void initBaza() {
@@ -134,7 +128,7 @@ class Sudoku {
     constructor Sudoku new() {
         let board = Array.new(81);
         let tablica = Array.new(81);
-	let fixed = Array.new(81);
+		let fixed = Array.new(81);
         let needsRedraw = true;
         let row = 0;
         let col = 0;
@@ -146,8 +140,8 @@ class Sudoku {
         do init();
         do drawLoadingBar(1, 4);
         do Sys.wait(50);
-    
-        do initBaza();
+
+		do Sys.wait(50);
         do drawLoadingBar(2, 4);
         do Sys.wait(50);
     
@@ -158,8 +152,6 @@ class Sudoku {
         do generateRandomBoard();
         do drawLoadingBar(4, 4);
         do Sys.wait(50);
-    
-        do Output.printString("\nDone!");
     
         return this;
     }
@@ -177,7 +169,7 @@ class Sudoku {
 
     method void run() {
         do Screen.clearScreen();
-	do draw();
+		do draw();
         while (true) {
             do handleInput();
             if(needsRedraw){
@@ -236,7 +228,6 @@ class Sudoku {
     
         do Output.printString("] ");
     
-        // ispis postotka
         do Output.printInt(percent);
         do Output.printChar(37); // '%'
     
