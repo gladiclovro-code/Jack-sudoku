@@ -10,17 +10,15 @@ class Sudoku {
     method int mod(int a, int b) {
         return a - Math.multiply(a / b, b);
     }
-
     method int rand(int max) {
         var int r;
 
         let r = Random.next();
 
-    // osiguraj da je pozitivan
+    // osigura
         if (r < 0) {
             let r = 0 - r;
         }
-
         return mod(r, max);
     }
 
@@ -121,11 +119,7 @@ class Sudoku {
         while (i < 81) {
             // uzmi ispravno rješenje iz tablice
             let board[i] = tablica[i];
-    
-            // generiraj “random praznine”
-            let rand = Random.next();  // 0–9
-    
-            // npr. ~50% prazno
+            let rand = Random.next(); 
             if (rand < sudokuDifficulty) {
                 let board[i] = 0;
 		let fixed[i] = 0;
@@ -148,23 +142,19 @@ class Sudoku {
     
         do Screen.clearScreen();
     
-        // ---- FAZA 1: init ----
         do Output.printString("Initializing...");
         do init();
         do drawLoadingBar(1, 4);
         do Sys.wait(50);
     
-        // ---- FAZA 2: baza ----
         do initBaza();
         do drawLoadingBar(2, 4);
         do Sys.wait(50);
     
-        // ---- FAZA 3: shuffle ----
         do shuffle();
         do drawLoadingBar(3, 4);
         do Sys.wait(50);
     
-        // ---- FAZA 4: generate ----
         do generateRandomBoard();
         do drawLoadingBar(4, 4);
         do Sys.wait(50);
@@ -200,7 +190,6 @@ class Sudoku {
     }
 
     method void draw() {
-    	
         do Screen.clearScreen();
         do drawGrid();
         do drawNumbers();
@@ -216,7 +205,7 @@ class Sudoku {
         while (i < 81) {
             if (board[i] = 0) {
                 let board[i] = tablica[i];
-                return;   // stani nakon jedne popunjene
+                return;
             }
             let i = i + 1;
         }
@@ -311,7 +300,7 @@ class Sudoku {
     	let value = board[index];
 
     	do Output.moveCursor(1 + r*2, 2 + c * 5/2);
-    	do Output.printString(" "); // obriši znak
+    	do Output.printString(" ");
 
     	if (value > 0) {
         	do Output.moveCursor(1 + r*2, 2 + c * 5/2);
@@ -385,7 +374,7 @@ class Sudoku {
     if (key = 132) { let col = col + 1; }
 if(isSolved()){
 	    do Output.moveCursor(5,30);
-            do Output.printString("CONGRATULATION!!!");
+            do Output.printString("CONGRATULATIONS!!!");
     	}
     if (key = 110 | (key = 78)) {
 	do Screen.clearScreen();
